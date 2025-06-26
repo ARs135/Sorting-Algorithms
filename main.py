@@ -5,7 +5,7 @@ import numpy as np
 
 # --- Constants ---
 WIDTH, HEIGHT = 800, 600
-BAR_COLOR = (0, 255, 0) # Old: (0, 255, 255)
+BAR_COLOR = (0, 255, 0)
 BG_COLOR = (0, 0, 0)
 FPS = 60
 list_size = 100
