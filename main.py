@@ -5,7 +5,7 @@ import numpy as np
 
 # --- Constants ---
 WIDTH, HEIGHT = 800, 600
-BAR_COLOR = (0, 255, 0)
+BAR_COLOR = (0, 255, 0) # Old: (0, 255, 255)
 BG_COLOR = (0, 0, 0)
 FPS = 60
 list_size = 100
@@ -34,6 +34,51 @@ def play_tone(value, max_val, duration=0.05):
     
     last_sound = pygame.sndarray.make_sound(stereo_wave)
     last_sound.play()
+
+# --- Flair ---
+def play_all(data):
+    max_val = max(data)
+    played_indices = set()
+
+    for i, val in enumerate(data):
+        screen.fill(BG_COLOR)
+
+        n = len(data)
+        bar_width = WIDTH / n
+
+        for j, v in enumerate(data):
+            x = j * bar_width
+            bar_height = (v / max_val) * (HEIGHT - 20)
+            y = HEIGHT - bar_height
+
+            if j in played_indices:
+                color = (255, 255, 255)  # already played = white
+            elif j == i:
+                color = (255, 0, 0)      # current bar = red
+            else:
+                color = BAR_COLOR        # default = green
+
+            pygame.draw.rect(screen, color, (x, y, bar_width, bar_height))
+
+        pygame.display.flip()
+        play_tone(val, max_val, duration=0.05)
+        played_indices.add(i)
+        time.sleep(0.01)
+
+        # Allow exit mid-play
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+
+    # Final redraw with all bars white
+    screen.fill(BG_COLOR)
+    for i, val in enumerate(data):
+        x = i * (WIDTH / len(data))
+        bar_height = (val / max_val) * (HEIGHT - 20)
+        y = HEIGHT - bar_height
+        pygame.draw.rect(screen, (255, 255, 255), (x, y, WIDTH / len(data), bar_height))
+    pygame.display.flip()
 
 # --- Event Handling ---
 def handle_events():
@@ -274,6 +319,8 @@ if __name__ == "__main__":
     mergesort(data_list)
     # quicksort(data_list)
     # timsort(data_list)
+
+    play_all(data_list)
 
     wait_for_exit()
 
