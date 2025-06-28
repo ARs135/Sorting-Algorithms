@@ -306,6 +306,24 @@ def merge_range(data, left, mid, right):
         visualize(data, [k])
         k += 1
 
+# === Slow Sort ===
+def slowsort(data, i=0, j=None):
+    if j is None:
+        j = len(data) - 1
+
+    if i >= j:
+        return
+
+    m = (i + j) // 2
+    slowsort(data, i, m)
+    slowsort(data, m + 1, j)
+
+    if data[j] < data[m]:
+        data[j], data[m] = data[m], data[j]
+        visualize(data, [j, m])
+
+    slowsort(data, i, j - 1)
+
 # --- Running ---
 if __name__ == "__main__":
     data_list = generate_list(list_size)
@@ -319,6 +337,7 @@ if __name__ == "__main__":
     mergesort(data_list)
     # quicksort(data_list)
     # timsort(data_list)
+    # slowsort(data_list)
 
     play_all(data_list)
 
