@@ -324,6 +324,42 @@ def slowsort(data, i=0, j=None):
 
     slowsort(data, i, j - 1)
 
+# === LSD Radix Sort ===
+def lsd_radix_sort(data, base=10):
+    max_val = max(data)
+    exp = 1  # exponent (1 = units, 10 = tens, 100 = hundreds, etc.)
+
+    while max_val // exp > 0:
+        counting_sort_by_digit(data, exp, base)
+        exp *= base
+
+
+def counting_sort_by_digit(data, exp, base):
+    n = len(data)
+    output = [0] * n
+    count = [0] * base
+
+    # Count digit occurrences
+    for i in range(n):
+        digit = (data[i] // exp) % base
+        count[digit] += 1
+        visualize(data, highlighted_indices=[i])
+
+    # Cumulative count
+    for i in range(1, base):
+        count[i] += count[i - 1]
+
+    # Build output (stable sort)
+    for i in range(n - 1, -1, -1):
+        digit = (data[i] // exp) % base
+        output[count[digit] - 1] = data[i]
+        count[digit] -= 1
+
+    # Copy output to original array
+    for i in range(n):
+        data[i] = output[i]
+        visualize(data, highlighted_indices=[i])
+
 # --- Running ---
 if __name__ == "__main__":
     data_list = generate_list(list_size)
@@ -334,10 +370,11 @@ if __name__ == "__main__":
     # bubblesort(data_list)
     # insertionsort(data_list)
     # selectionsort(data_list)
-    mergesort(data_list)
+    # mergesort(data_list)
     # quicksort(data_list)
     # timsort(data_list)
     # slowsort(data_list)
+    lsd_radix_sort(data_list)
 
     play_all(data_list)
 
